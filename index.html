@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>TT BOT</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #15171e;
+      color: #f5f3ea;
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 15px;
+      background: #090a0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 25px;
+    }
+
+    .brand h2 {
+      font-size: 22px;
+    }
+
+    .user {
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .status {
+      color: #999;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .notice {
+      border: 1px solid #d4c879;
+      background: #302b1b;
+      color: #e8d778;
+      padding: 17px;
+      border-radius: 22px;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .label {
+      color: #d5b45a;
+      font-size: 12px;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 42px;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .description {
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .balance {
+      background: #22252d;
+      border-radius: 25px;
+      padding: 25px;
+      margin-bottom: 18px;
+    }
+
+    .balance-title {
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .balance-value {
+      font-size: 38px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .tap-button {
+      width: 100%;
+      height: 190px;
+      border: none;
+      border-radius: 30px;
+      background: #d4b84e;
+      color: #111;
+      font-size: 35px;
+      font-weight: bold;
+      margin: 10px 0 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      transition: .1s;
+    }
+
+    .tap-button:active {
+      transform: scale(.96);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .card {
+      background: #22252d;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .card-title {
+      color: #aaa;
+      font-size: 13px;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 75px;
+      background: #171920;
+      border-top: 1px solid #292c34;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .nav-item {
+      color: #aaa;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .nav-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item.active {
+      color: #d7bb50;
+    }
+
+    @media(max-width:400px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .tap-button {
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <div class="header">
+
+      <div class="brand">
+        <div class="logo">⚡</div>
+
+        <div>
+          <h2>TT.BOT</h2>
+        </div>
+      </div>
+
+      <div class="user">
+        <div class="user-name" id="username">Guest</div>
+        <div class="status" id="status">Connecting...</div>
+      </div>
+
+    </div>
+
+
+    <div class="notice">
+      <b>TT BOT</b><br>
+      Welcome to the TT BOT Mini App.
+      Connect through Telegram to start earning.
+    </div>
+
+
+    <div class="label">TAP TO EARN</div>
+
+    <h1>Start earning.</h1>
+
+    <p class="description">
+      Tap the button to collect TAP points.
+      Complete tasks and invite friends to increase your rewards.
+    </p>
+
+
+    <div class="balance">
+
+      <div class="balance-title">
+        YOUR BALANCE
+      </div>
+
+      <div class="balance-value">
+        <span id="balance">0</span> TAP
+      </div>
+
+    </div>
+
+
+    <button class="tap-button" onclick="tap()">
+      ⚡ TAP
+    </button>
+
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-title">
+          ENERGY
+        </div>
+
+        <div class="card-value">
+          <span id="energy">1000</span>
+        </div>
+      </div>
+
+
+      <div class="card">
+        <div class="card-title">
+          REFERRALS
+        </div>
+
+        <div class="card-value">
+          <span id="referrals">0</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="bottom-nav">
+
+    <div class="nav-item active">
+      <div class="nav-icon">⚡</div>
+      Tap
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">◎</div>
+      Tasks
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">👥</div>
+      Friends
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">▣</div>
+      Wallet
+    </div>
+
+    <div class="nav-item">
+      <div class="nav-icon">♙</div>
+      Profile
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let balance = 0;
+    let energy = 1000;
+
+    const tg = window.Telegram.WebApp;
+
+    tg.ready();
+    tg.expand();
+
+
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+
+      const user = tg.initDataUnsafe.user;
+
+      document.getElementById("username").textContent =
+        user.first_name || "User";
+
+      document.getElementById("status").textContent =
+        "Connected";
+
+    } else {
+
+      document.getElementById("username").textContent =
+        "Guest";
+
+      document.getElementById("status").textContent =
+        "Open inside Telegram";
+
+    }
+
+
+    function tap() {
+
+      if (energy <= 0) {
+        alert("Not enough energy!");
+        return;
+      }
+
+      balance++;
+      energy--;
+
+      document.getElementById("balance").textContent =
+        balance;
+
+      document.getElementById("energy").textContent =
+        energy;
+
+    }
+
+  </script>
+
+</body>
+</html>
